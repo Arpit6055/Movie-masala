@@ -1,0 +1,38 @@
+<div class="container">
+    <h3 class="mb-4 mb-sm-0">Now Playing</h3>
+    <div class="card-columns my-3">
+        {{#each movies}}
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h4 style="font-size: 20px;">{{this.title}}</h4>
+            </div>
+            <a href="/movies/{{this.id}}" class="stretched-link"></a>
+            <img class="card-img-bottom" alt="{{this.title}}" src="https://image.tmdb.org/t/p/w500{{this.poster_path}}">
+        </div>
+        {{/each}}
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row">
+        <div class="col-12">
+            <nav class="d-flex flex-row">
+                <a id="prev-link" class="btn btn-light btn-lg">Previous</a>
+                <a id="next-link" class="btn btn-light ml-auto btn-lg">Next</a>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const page = parseInt(urlParams.get('page'));
+    if (page > 1)
+        $("#prev-link").attr("href", `${window.location.origin}/?page=${page - 1}`);
+    else
+        $("#prev-link").remove();
+    if (page < 1000)
+        $("#next-link").attr("href", `${window.location.origin}/?page=${page + 1}`);
+    else
+        $("#next-link").remove();
+</script>

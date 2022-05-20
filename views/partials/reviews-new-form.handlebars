@@ -1,0 +1,41 @@
+<!-- views/reviews-edit.handlebars -->
+<form method="POST" action="/movies/{{movie.id}}/reviews" id="review-form">
+
+    <!-- TITLE -->
+    <div class="form-group">
+      <label for="review-title">Title</label>
+      <input class="form-control" id="review-title" type="text" name="title"/>
+    </div>
+
+    <!-- MOVIE TITLE -->
+    <div class="form-group">
+      <label for="movie-name">Movie Name</label>
+      <input class="form-control" name="movieTitle" type="text" value="{{movie.title}}" readonly/>
+    </div>
+
+    <!-- RATING -->
+    <div class="form-group">
+      <label for="rating">Rating</label>
+      <select id="rating" name="rating" class="form-control">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5" selected>5</option>
+      </select>
+    </div>
+
+    <!-- DESCRIPTION -->
+    <div class="form-group">
+      <label for="review-description">Description</label>
+      <textarea class="form-control" id="review-description" name="description" rows="10" /></textarea>
+    </div>
+
+    <input type="hidden" class="form-control" name="movieId" value="{{movie.id}}">
+
+  <!-- BUTTON -->
+  <div class="form-group" align="right">
+    <button class="btn btn-success" type="submit">Save review</button>
+  </div>
+
+</form>

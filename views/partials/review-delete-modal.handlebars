@@ -1,0 +1,16 @@
+<div class="modal delete-review" id="delete-review-{{review-id}}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body p-5">
+                <div class="modal-title col-12 mb-5 text-center">
+                    <span class="material-icons" style="font-size: 70px; color: rgb(45, 62, 79)">delete</span>
+                    <div class="mt-4">
+                        <h4 style="color: rgb(45, 62, 79)">You're about to delete this review</h4>
+                    </div>
+                </div>
+                <form class="mb-2 delete-review" method="POST" action="/reviews/{{review-id}}?_method=DELETE"><button type="submit" class="btn btn-danger btn-block btn-lg">Delete</button></form>
+                <button type="button" class="btn btn-block btn-secondary btn-lg" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

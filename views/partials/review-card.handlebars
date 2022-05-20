@@ -1,0 +1,18 @@
+<div class="card pt-2 px-2 mb-4" id="review-{{review._id}}">
+    <div class="card-body">
+        <h4 class="card-title text-primary">
+            <a href="/reviews/{{this._id}}" class="text-reset">{{review.title}}</a>
+        </h4>
+        <h5 class="card-subtitle text-primary mb-4 font-weight-bold">{{review.rating}} / 5</h5>
+        <div class="card-text">
+            <div style="max-height: 50vh; overflow-y: scroll">
+                <blockquote style="white-space: pre-line">{{review.description}}</blockquote>
+            </div>
+            <!-- Buttons -->
+            <div class="d-flex flex-row-reverse mt-3">
+                <a href="/reviews/{{this._id}}" class="btn btn-link">View</a>
+                <button class="btn btn-link" type="button" data-toggle="modal" data-target="#delete-review-{{review._id}}">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>

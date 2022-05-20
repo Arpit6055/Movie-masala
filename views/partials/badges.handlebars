@@ -1,0 +1,21 @@
+<div class="container-fluid my-3 text-nowrap white-space-nowrap">
+	<div class="row px-0">
+		<span id="rating" class="badge mr-1">
+			{{rating}}
+		</span>
+		{{#each genres}}
+		<span class="badge badge-light mr-1">
+			{{this.name}}
+		</span>
+		{{/each}}
+	</div>
+</div>
+<script>
+	const rating = parseFloat($("#rating").text());
+	if (rating < 4)
+		$("#rating").addClass("badge-danger")
+	else if (rating < 7)
+		$("#rating").addClass("badge-warning")
+	else
+		$("#rating").addClass("badge-success")
+</script>

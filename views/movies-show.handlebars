@@ -1,0 +1,65 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 order-md-2">
+            <h2 class="display-5">{{movie.title}}</h2>
+            {{> badges genres=movie.genres rating=movie.vote_average}}
+            <p class="lead">{{movie.overview}}</p>
+        </div>
+        <div class="col-md-6 order-md-1 no-gutters text-center">
+            <img class="img-fluid" src="https://image.tmdb.org/t/p/w780{{movie.poster_path}}"/>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="my-3">Trailer</h4>
+            <div class="embed-responsive embed-responsive-16by9">
+                <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{movie.trailer_youtube_id}}?rel=0"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-5" id="reviews">
+        <div class="col-sm-12">
+            <hr>
+            <div class="d-flex flex-row justify-content-between">
+                <h4>Reviews</h4>
+                <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#new-review">New Review</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-md-8 col-sm-10 offset-md-2 offset-sm-1" name="reviews-col">
+            {{#each reviews}}
+                {{>review-card review=this}}
+            {{/each}}
+        </div>
+    </div>
+</div>
+
+<div id="form-modals">
+    <div class="modal" id="new-review">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">New Review</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+    
+                <div class="modal-body">
+                    {{> reviews-new-form}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="delete-modals">
+    {{#each reviews}}
+        {{>review-delete-modal review-id=this._id}}
+    {{/each}}
+</div>
+
+<script src="/javascript/movies-show-ajax.js"></script>

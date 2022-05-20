@@ -1,0 +1,56 @@
+<!-- admin.handlebars -->
+<div class="container" style="height: 70vw">
+	<div class="row">
+		<div class="col-12">
+			<h2 style="font-size: 30px">Reviews</h2>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-12" style="overflow: scroll">
+			<table class="table table-hover">
+				<thead class="thead-dark">
+					<tr>
+						<th scope="col">ID</th>
+						<th scope="col">Movie Title</th>
+						<th scope="col">Title</th>
+						<th scope="col">Rating</th>
+						<th scope="col">Description</th>
+						<th scope="col">Delete</th>
+					</tr>
+				</thead>
+				<tbody>
+					{{#each reviews}}
+					<tr id="{{this._id}}">
+						<td scope="row">
+							<a href="/reviews/{{this._id}}" class="text-reset text-truncate" style="display: block; max-width: 10ch">{{this._id}}</a>
+						</td>
+						<td>
+							<a href="movies/{{this.movieId}}" class="text-reset text-nowrap">{{this.movieTitle}}</a>
+						</td>
+						<td>
+							<a href="/reviews/{{this._id}}" class="text-reset">
+								<div style="min-width: 10ch;">{{this.title}}</div>
+							</a>
+						</td>
+						<td>
+							{{this.rating}}
+						</td>
+						<td>
+							<div style="white-space: pre-line; max-height: 30vh; min-width: 20ch; overflow-y: scroll">{{this.description}}</div>
+						</td>
+						<td>
+							<input style="width: 30px; height: 30px" class="form-check-inline larger-checkbox select-review" type="checkbox">
+						</td>
+					</tr>
+					{{/each}}
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="row">
+		<div name="buttons" class="clearfix col-12">
+			<button class="btn btn-danger float-right" id="confirm-delete">Confirm</button>
+		</div>
+	</div>
+</div>
+<script src="/javascript/admin-ajax.js"></script>

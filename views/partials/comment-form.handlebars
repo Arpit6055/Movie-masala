@@ -1,0 +1,31 @@
+<!-- views/partials/comment-form.handlebars -->
+
+<form action="/reviews/{{review._id}}/comments" method="POST" reviewId="{{review._id}}" id="comment-form">
+
+    <legend><h4>Add a Comment</h4></legend>
+
+    <!-- TITLE -->
+    <div class="form-group">
+      <label for="comment-title">Title</label><br>
+      <input class="form-control"
+        id="comment-title"
+        type="text"
+        name="title"
+        placeholder="Title"/>
+    </div>
+
+    <!-- DESCRIPTION -->
+    <div class="form-group">
+      <label for="comment-content">Description</label><br>
+      <textarea class="form-control"
+      id="comment-content"
+      name="content"
+      rows="3"
+      placeholder="Your comment..."/></textarea>
+    </div>
+
+    <input type="hidden" name="reviewId" value="{{review._id}}">
+
+  <!-- BUTTON -->
+  <button class="btn btn-primary" type="submit">Save Comment</button>
+</form>

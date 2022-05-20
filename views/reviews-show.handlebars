@@ -1,0 +1,54 @@
+<!-- views/reviews-show.handlebars -->
+<div class="container mt-2">
+    <div class="row mb-3">
+        <div class="col-md-8 offset-md-2">
+            <div name="review" review-id="{{review._id}}" class="mx-sm-0">
+
+                <!-- Review info -->
+                <h3 class="mb-3" id="review-title-info">{{review.title}}</h3>
+                <h5 class="font-italic font-weight-light mb-3">
+                    <a class="text-reset" href="/movies/{{review.movieId}}">{{review.movieTitle}}</a>
+                </h5>
+                <h4 class="font-weight-bold"><span id="review-rating-info">{{review.rating}}</span> / 5</h4>
+                <p style="white-space: pre-line" id="review-description-info" class="mt-5">{{review.description}}</p>
+
+                <!-- Buttons -->
+                <div class="d-flex flex-row-reverse">
+                    <button class="btn btn-link" type="submit" data-toggle="modal" data-target="#delete-review-{{review._id}}">Delete</button>
+                    <button class="btn btn-link" type="button" data-toggle="modal" data-target="#edit-review">Edit</button>
+                </div>
+            </div>
+
+            <!-- Comment form -->
+            {{> comment-form}}
+            
+            <!-- Show Comments -->
+            <div name="comments" class="mx-sm-0 my-5">
+                {{#each comments}}
+                    {{> comment-card}}
+                {{/each}}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modals">
+    <div class="modal" id="edit-review">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit Review</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+    
+                <div class="modal-body">
+                    {{> reviews-edit-form}}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {{> review-delete-modal review-id=review._id}}
+</div>
+
+<script src="/javascript/reviews-show-ajax.js"></script>
