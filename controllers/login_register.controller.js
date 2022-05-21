@@ -50,9 +50,10 @@ exports.newUserRegistry = async (req, res, next) => {
 exports.login = async (req, res, next) => {
   try {
     console.log({body:req.body});
-    passport.authenticate("local-login", {
+    passport.authenticate("local-login",{
       successRedirect: "/",
-      failureRedirect: "/home/",
+      failureRedirect: '/auth/login/',
+      failureFlash: true
     })(req, res, next);
   } catch (error) {
     console.log(error);
@@ -74,6 +75,14 @@ exports.dashboard = async(req, res) =>{
   try {
     console.log("dashboard here");
     return res.render('dashboard', { title: 'Dashboard' , layout: 'main'});
+  } catch (error) {
+    console.log(error);
+    console.log("error n dashboard");
+  }
+}
+exports.errorPage = async(req, res) =>{
+  try {
+    return res.render('error', {error:req.query.error || req.params.error , layout: 'main'});
   } catch (error) {
     console.log(error);
     console.log("error n dashboard");

@@ -1,7 +1,7 @@
 var LocalStrategy = require('passport-local').Strategy;
 var User = require('../models/user');
 var bcrypt = require('bcryptjs');
-const { date } = require('joi');
+
 
 
 module.exports = function(passport) {
@@ -18,7 +18,7 @@ module.exports = function(passport) {
 	passport.use('local-login', new LocalStrategy({
 		passReqToCallback: true
 	}, function(req, username, password, done){
-		User.getUserByUsername(username, function(err, user){
+		User.getUserByUsername(username,async function(err, user){
 			if(err){
 				console.log('Error' + err);
 				return done(err);
@@ -26,32 +26,68 @@ module.exports = function(passport) {
 			
 			if(!user){
 				console.log('Error : user not found')
-				return done(null, false, req.flash('error', 'User not found'));
+				return done(null, false, req.flash('errors', {msg:'User not found'}));
 			}
 			if(user.lockedUpto && Date.now()<user.lockedUpto){
-				console.log('error', 'Account locked');
-				return done(null,false, req.flash('error', 'Account locked'))
+					return done(null,false,req.flash('errors', {msg:'Account locked for 24 hour'}));
 			}
-			
 			if(!isValidPassword(user, password)){
-				if(user.loginAttempts==3){
-					console.log('error', 'Invalid password');
+				if (user.loginAttempts == 3) {
 					var tommorow = new Date(new Date().getTime() + (24 * 60 * 60 * 1000));
-					User.updateOne({username}, {loginAttempts:4,lockedUpto:tommorow});
-				}else{
+					var lockAcc = await User.updateOne({ username }, { loginAttempts: 4, lockedUpto: tommorow });
+					return done(null, false, req.flash('errors', {msg:'Account locked for 24 hour'}));
+				} else {
 					console.log("inc loginttempt");
-					User.updateOne({username}, {$inc: { loginAttempts: 1 }});
+					var lockAcc = await User.updateOne({ username }, { loginAttempts: user.loginAttempts + 1 });
+					return done(null, false, req.flash('errors', {msg:`Invalid password,${4-(user.loginAttempts + 1) } attempts left`}));
 				}
-				return done(null, false, req.flash('error', 'Invalid password'));
+			}
+			if(user.loginAttempts>=1){
+				var unlockAcc = await User.updateOne({username}, {loginAttempts:0, lockedUpto:null})
 			}
 			return done(null, user, req.flash('success', 'You are now logged in'));
 		});
 	}));
 	var isValidPassword = function(user, password){
-		var a = bcrypt.compareSync(password, user.password);
-		if(a && (user.lockedUpto && user.lockedUpto < Date.now() &&  user.loginAttempts==4)){
-			User.updateOne({username:user.username}, {lockedUpto:null, loginAttempts:0})
-		}
-		return a;
+		console.log("checking hash");
+		return bcrypt.compareSync(password, user.password);
 	}
 }
+
+
+// 	passport.use('local-login', new LocalStrategy({
+// 		passReqToCallback: true
+// 	},  function(req, username, password, done){
+// 		User.getUserByUsername(username, async function(err, user){
+// 			if(err){
+// 				console.log('Error' + err);
+// 				return done(err);
+// 			}
+// 			if(!user){
+// 				console.log('Error : user not found')
+// 				return done(null, false, req.flash('error', 'User not found'));
+// 			}
+// 			if(user.lockedUpto && Date.now()<user.lockedUpto){
+// 				console.log('error', 'Account locked');
+// 				return done(null,false, req.flash('error', 'Account locked'))
+// 			}
+// 			if(!isValidPassword(user, password)){
+// 				console.log("wrong pswrd");
+// 				if(user.loginAttempts==3){
+// 					console.log('error', 'third attempt');
+// 					var tommorow = new Date(new Date().getTime() + (24 * 60 * 60 * 1000));
+// 					var abc =await User.updateOne({username}, {loginAttempts:4,lockedUpto:tommorow});
+// 				}else{
+// 					console.log("inc loginttempt");
+// 					var abc = await User.updateOne({username}, {loginAttempts:user.loginAttempts+1});
+// 				}
+// 				return done(null, false, req.flash('error', 'Invalid password'));
+// 			}else{
+// 				return done(null, user, req.flash('success', 'You are now logged in'));
+// 			}
+// 		});
+// 	}));
+// 	var isValidPassword = async function(user, password){
+// 		return bcrypt.compareSync(password, user.password);
+// 	}
+// }

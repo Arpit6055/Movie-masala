@@ -41,5 +41,6 @@ router.get('/logout/', newUser.logout);
 
 router.get('/dashboard/',ensureAuthenticated, newUser.dashboard);
 
+router.get('/error/', newUser.errorPage)
 
 module.exports = router;

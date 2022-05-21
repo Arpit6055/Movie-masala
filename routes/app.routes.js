@@ -35,4 +35,6 @@ router.post('/reviews/delete/:id/', ensureAuthenticated, movies.deleteReview);
 router.post('/reviews/update/:id/', ensureAuthenticated, movies.updateReview);
 
 
+
+
 module.exports  = router

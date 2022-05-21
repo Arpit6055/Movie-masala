@@ -3,46 +3,27 @@ connectDB = require('./config/db');
 connectDB();
 const path = require('path')
 , logger = require('morgan')
-, expressValidator = require('express-validator')
 , cookieParser = require('cookie-parser')
 , bodyParser = require('body-parser')
-, { engine, create } = require('express-handlebars')
+, { engine } = require('express-handlebars')
 , session  = require('express-session')
-, passport = require('passport')
-, flash = require('connect-flash');
+, passport = require('passport'),
+flash = require('connect-flash');
 require('./config/passport')(passport);
 
-
 var app = express();
+
 
 app.use(
   session({
     secret: 'secret',
-    resave: true,
-    saveUninitialized: true
+    resave: false,
+    saveUninitialized: true,
+    secure: true
   })
 );
 
-app.use(flash());
 
-
-// In this example, the formParam value is going to get morphed into form body format useful for printing.
-app.use(expressValidator({
-  errorFormatter: function(param, msg, value) {
-      var namespace = param.split('.')
-      , root    = namespace.shift()
-      , formParam = root;
-
-    while(namespace.length) {
-      formParam += '[' + namespace.shift() + ']';
-    }
-    return {
-      param : formParam,
-      msg   : msg,
-      value : value
-    };
-  }
-}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -61,13 +42,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 app.use(passport.session());
 
-//makes a global variable to access the flash messages within the view template
-
-app.use(function (req, res, next) {
-  res.locals.messages = require('express-messages')(req, res);
+app.use(flash());
+app.use(function(req, res, next) {
+  res.locals.success_msg = req.flash('success_msg');
+  res.locals.error_msg = req.flash('error_msg');
+  res.locals.errors = req.flash('errors');
   next();
 });
-
 
 //routes
 app.get('/home/', function(req, res) {
@@ -90,9 +71,11 @@ app.use(function(req, res, next) {
 if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
+    // console.log(err);
+    console.log("error page rendered");
     res.render('error', {
       message: err.message,
-      error: err
+      error: typeof err=="object"?JSON.stringify(err):err
     });
   });
 }

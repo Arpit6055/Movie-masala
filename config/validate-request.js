@@ -18,7 +18,6 @@ function validateRequest(req, res, next, schema, querySchema) {
       res.status(400).render("error", {message:JSON.stringify(errorObj)});
     } else {
       if(querySchema){
-        console.log({value});
         req.query = value;
       }
       else req.body = value;
