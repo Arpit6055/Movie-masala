@@ -35,9 +35,10 @@ router.get('/:search/' ,homepageSchema,ensureAuthenticated,movies.HomePage);
 router.get('/movies/:id' , ensureAuthenticated,movies.movieDetails);
 router.post('/movies/:id/reviews',createReviewSchema, ensureAuthenticated, movies.createReview);
 
+//rotten-potato-rating
+router.get('/reviews/rating',reviewCountSchema, movies.countandtotalReview);
 
 //review APIs
-router.get('/reviews/rating',reviewCountSchema, movies.countandtotalReview);
 router.get('/reviews/:id', ensureAuthenticated, movies.showReview);
 router.post('/reviews/delete/:id/', ensureAuthenticated, movies.deleteReview);
 router.post('/reviews/update/:id/', forwardAuthenticated, movies.updateReview);
