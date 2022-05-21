@@ -111,7 +111,8 @@ exports.showReview = async  (req, res) => {
         [review] = entries;
         console.log(review);
         res.render('reviews-show', {
-              review: review
+              review: review,
+              usID : req.user._id
           })
       })
     .catch(console.error)

@@ -42,3 +42,13 @@
 </div>
 
 <script src="/javascript/reviews-show-ajax.js"></script>
+<script>
+    if("{{usID}}"!="{{review.userId}}"){
+    console.log("{{usID}} not equal to {{review.userId}} ")
+        var editBtn = document.querySelectorAll(".btn-link")
+        editBtn.forEach((e)=>{
+            e.style.display="none"
+        })
+    }
+    console.log("{{usID}}")
+</script>
