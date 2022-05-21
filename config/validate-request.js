@@ -15,7 +15,8 @@ function validateRequest(req, res, next, schema, querySchema) {
         errorObj.push(tob);
       });
       console.log({msg : "Error in Joi validation",error:{...errorObj[0]}});
-      res.status(400).render("error", {message:JSON.stringify(errorObj)});
+      req.flash('errors', {msg:'please provide valid parameters required by the Application'})
+      res.redirect("/")
     } else {
       if(querySchema){
         req.query = value;
@@ -25,6 +26,7 @@ function validateRequest(req, res, next, schema, querySchema) {
     }
   } catch (error) {
     console.log({msg:"Error in validateRequest",error});
+    res.send(error)
   }
  
 }

@@ -28,8 +28,8 @@ exports.HomePage = async (req, res) => {
             });
         }
     } catch (error) {
-        console.log(error);
-        res.status(500).json({ error: "SERVER ERROR" });
+        req.flash('errors', {msg:'SERVER ERROR'})
+        res.redirect("/")
     }
 };
 
@@ -57,7 +57,11 @@ exports.movieDetails = async (req, res) => {
                 usId: req.user._id
             });
         })
-        .catch(console.error);
+        .catch(err => {
+            console.error(err);
+            req.flash('errors', {msg:'SERVER ERROR'})
+      res.redirect("/")
+        });
 };
 
 exports.createReview = async (req,res)=>{
@@ -68,8 +72,9 @@ exports.createReview = async (req,res)=>{
         res.status(200).send(review)
     })
     .catch(err => {
-        console.error(err);
-        res.status(400).send(err);
+        console.log(err);
+        req.flash('errors', {msg:'SERVER ERROR'})
+        res.redirect("/")
     });
 }
 
@@ -86,8 +91,9 @@ exports.deleteReview = async (req,res)=>{
               res.redirect(`/movies/${review.movieId}"`)
       })
       .catch(err => {
-          console.error(err)
-          res.status(400).send(err);
+        console.error(err)
+        req.flash('errors', {msg:'SERVER ERROR'})
+        res.redirect("/")
       })
 }
 
@@ -99,7 +105,8 @@ exports.updateReview = async (req, res) => {
       })
       .catch(err => {
           console.error(err);
-          res.status(400).send(err);
+          req.flash('errors', {msg:'SERVER ERROR'})
+    res.redirect("/")
       })
 }
 
@@ -115,6 +122,10 @@ exports.showReview = async  (req, res) => {
               usID : req.user._id
           })
       })
-    .catch(console.error)
+    .catch(err => {
+        console.error(err);
+        req.flash('errors', {msg:'SERVER ERROR'})
+  res.redirect("/")
+    })
 }
 module.exports = exports;

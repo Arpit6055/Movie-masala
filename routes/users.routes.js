@@ -36,11 +36,5 @@ router.post('/register/',registerSchema,forwardAuthenticated, newUser.newUserReg
 // Login
 router.post('/login/',loginSchema,forwardAuthenticated, newUser.login);
 
-// Logout
-router.get('/logout/', newUser.logout);
-
-router.get('/dashboard/',ensureAuthenticated, newUser.dashboard);
-
-router.get('/error/', newUser.errorPage)
 
 module.exports = router;

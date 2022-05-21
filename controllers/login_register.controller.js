@@ -6,8 +6,8 @@ exports.getLoginPage = async (req, res) => {
     console.log("welcome to login");
     res.status(200).render('login', { title: 'Login', layout : 'layout'});
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "SERVER ERROR" });
+    req.flash('errors', {msg:'SERVER ERROR'})
+    res.redirect("/")
   }
 };
 exports.getRegisterPage = async (req, res) => {
@@ -47,6 +47,7 @@ exports.newUserRegistry = async (req, res, next) => {
     res.status(500).json({ error: "SERVER ERROR" });
   }
 };
+
 exports.login = async (req, res, next) => {
   try {
     console.log({body:req.body});
@@ -56,37 +57,9 @@ exports.login = async (req, res, next) => {
       failureFlash: true
     })(req, res, next);
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "SERVER ERROR" });
+    req.flash('errors', {msg:'SERVER ERROR'})
+    res.redirect("/")
   }
 };
-exports.logout = async (req, res) => {
-  try {
-    req.logout();
-    req.flash('success', 'Logged out successfully');
-    res.redirect('/');
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "SERVER ERROR" });
-  }
-};
-
-exports.dashboard = async(req, res) =>{
-  try {
-    console.log("dashboard here");
-    return res.render('dashboard', { title: 'Dashboard' , layout: 'main'});
-  } catch (error) {
-    console.log(error);
-    console.log("error n dashboard");
-  }
-}
-exports.errorPage = async(req, res) =>{
-  try {
-    return res.render('error', {error:req.query.error || req.params.error , layout: 'main'});
-  } catch (error) {
-    console.log(error);
-    console.log("error n dashboard");
-  }
-}
 
 module.exports = exports;
