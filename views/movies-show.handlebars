@@ -3,6 +3,7 @@
         <div class="col-md-6 order-md-2">
             <h2 class="display-5">{{movie.title}}</h2>
             {{> badges genres=movie.genres rating=movie.vote_average}}
+            <h4>Rotten Potato rating : <span class="font-weight-bold" id="rpr"></span>(<span id="rpc"></span> user)</h4>
             <p class="lead">{{movie.overview}}</p>
         </div>
         <div class="col-md-6 order-md-1 no-gutters text-center">
@@ -61,5 +62,20 @@
         {{>review-delete-modal review-id=this._id}}
     {{/each}}
 </div>
-
+<script>
+    console.log(`${window.location.origin}/reviews/rating?id={{movie.id}}`)
+    fetch( `${window.location.origin}/reviews/rating?id={{movie.id}}` ).then(response => response.json())
+  .then((data) => {
+      console.log(data)
+      if(data.count){
+          document.querySelector("#rpr").textContent = data.avg_rating
+        document.querySelector("#rpc").textContent = data.count
+      }else{
+          document.querySelector("#rpr").textContent = "No ratings"
+        document.querySelector("#rpc").textContent = "0"
+      }
+        
+  }
+  );
+</script>
 <script src="/javascript/movies-show-ajax.js"></script>

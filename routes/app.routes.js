@@ -2,7 +2,7 @@ const router = require('express').Router(),
 Joi = require("joi"),
 validateRequest = require('../config/validate-request'),
 movies = require('../controllers/movies.controller'),
-{ensureAuthenticated } = require("../config/auth");
+{ensureAuthenticated, forwardAuthenticated } = require("../config/auth");
 
 
 function homepageSchema(req, res, next) {
@@ -12,6 +12,12 @@ function homepageSchema(req, res, next) {
     });
     validateRequest(req, res, next, schema,1);
   }
+function reviewCountSchema(req, res, next) {
+    const schema = Joi.object({
+         id:Joi.number().integer().min(1).required()
+    });
+    validateRequest(req, res, next, schema,1);
+}
 function createReviewSchema(req, res, next) {
     const schema = Joi.object({
         title: Joi.string().min(2).required(),
@@ -29,10 +35,13 @@ router.get('/:search/' ,homepageSchema,ensureAuthenticated,movies.HomePage);
 router.get('/movies/:id' , ensureAuthenticated,movies.movieDetails);
 router.post('/movies/:id/reviews',createReviewSchema, ensureAuthenticated, movies.createReview);
 
+
 //review APIs
+router.get('/reviews/rating',reviewCountSchema, movies.countandtotalReview);
 router.get('/reviews/:id', ensureAuthenticated, movies.showReview);
 router.post('/reviews/delete/:id/', ensureAuthenticated, movies.deleteReview);
-router.post('/reviews/update/:id/', ensureAuthenticated, movies.updateReview);
+router.post('/reviews/update/:id/', forwardAuthenticated, movies.updateReview);
+
 
 
 

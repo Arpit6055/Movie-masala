@@ -22,10 +22,17 @@ exports.newUserRegistry = async (req, res, next) => {
   try {
     let {username,name,email,password,join_date} = req.body;
     console.log({body:req.body});
-    User.findOne({email}).then((user) => {
+    User.findOne({$or: [{
+      email
+      },
+      {
+         username
+      },
+      ]
+}).then((user) => {
             console.log({msg : "Inside user"});
             if (user) {
-              req.flash("error_msg", "Email already exists");
+              req.flash('errors', {msg:'Email or username already exist'})
               res.redirect("/auth/register/");
             }else {
                 const newUser = new User({name,email,password,username,join_date});
