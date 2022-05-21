@@ -17,11 +17,26 @@ var UserSchema = mongoose.Schema({
 	join_date: {
 		type: Date
 	},
+	loginAttempts: { 
+		type: Number, 
+		required: true, 
+		default: 0 
+	},
+	lockedUpto: {
+		type: Date,
+		default: null
+	},
 	updatedAt: {
 		type: Date,
 		default: Date.now
 	}
 });
+
+UserSchema.statics.failedLogin = {
+    NOT_FOUND: 0,
+    PASSWORD_INCORRECT: 1,
+    MAX_ATTEMPTS: 2
+};
 
 var User = module.exports = mongoose.model('user', UserSchema);
 

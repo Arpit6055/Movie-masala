@@ -1,5 +1,7 @@
 <div class="container">
-    <h3 class="mb-4 mb-sm-0">Now Playing</h3>
+    
+    <div><input class="form-control mr-sm-2 searchColumn" type="search" placeholder="Search" aria-label="Search"></div>
+    <h3 class="mb-4 mb-sm-0">Now Playing  </h3>
     <div class="card-columns my-3">
         {{#each movies}}
         <div class="card h-100">
@@ -25,6 +27,8 @@
 </div>
 
 <script>
+
+    
     const urlParams = new URLSearchParams(window.location.search);
     const page = {{page}};
     if (page > 1)
@@ -35,4 +39,12 @@
         $("#next-link").attr("href", `${window.location.origin}/?page=${page + 1}`);
     else
         $("#next-link").remove();
+    var searchColumn = document.querySelector(".searchColumn");
+    searchColumn.addEventListener("keypress", (event)=> {
+    var search = searchColumn.value
+    if (event.keyCode === 13 && search.length>3) { 
+        var url = `${window.location.origin}/${search}/?page=1`
+        window.location=url;
+    }
+  });    
 </script>

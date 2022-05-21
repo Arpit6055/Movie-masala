@@ -2,24 +2,37 @@ const MovieDb = require("moviedb-promise");
 require('dotenv').config();
 const API_KEY = process.env.MOVIE_API_KEY;
 const moviedb = new MovieDb(API_KEY)
-, Review = require("../models/review"),
-Comment = require('../models/comment');
+, Review = require("../models/review");
 
 exports.HomePage = async (req, res) => {
     try {
-        var {page} = req.query;
-        console.log({page});
-        moviedb.miscNowPlayingMovies({ page: page }).then((movies) => {
-            res.render("movies-index", {
-                movies: movies.results,
-                page:page,
+        var {page} = req.query,
+        {search} = req.params;
+        var obj={}
+        obj.page=page
+        if(search){
+            obj.query=search
+            moviedb.searchMovie(obj).then((movies) => {
+                return res.render("movies-index", {
+                    movies: movies.results,
+                    page:page,
+                    search
+                });
             });
-        });
+        }else{
+            moviedb.miscNowPlayingMovies(obj).then((movies) => {
+                return res.render("movies-index", {
+                    movies: movies.results,
+                    page:page,
+                });
+            });
+        }
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: "SERVER ERROR" });
     }
 };
+
 
 exports.movieDetails = async (req, res) => {
     Promise.all([
@@ -41,7 +54,7 @@ exports.movieDetails = async (req, res) => {
             res.render("movies-show", {
                 movie: movie,
                 reviews: reviews,
-                myId: req.user._id
+                usId: req.user._id
             });
         })
         .catch(console.error);
@@ -62,11 +75,10 @@ exports.createReview = async (req,res)=>{
 
 exports.deleteReview = async (req,res)=>{
     Promise.all([
-        Review.findByIdAndRemove(req.params.id),
-        Comment.deleteMany({ reviewId: req.params.id })
+         Review.findOneAndDelete({_id:req.params.id, userId:req.user._id}),
     ])
       .then(entries => {
-          [review, comments] = entries;
+          [review] = entries;
           console.log("Deleted review");
           if (req.xhr)
               res.status(200).send(review)
@@ -77,5 +89,31 @@ exports.deleteReview = async (req,res)=>{
           console.error(err)
           res.status(400).send(err);
       })
+}
+
+exports.updateReview = async (req, res) => {
+    Review.findOneAndUpdate({_id:req.params.id, userId:req.user._id}, req.body, { new: true }).lean()
+      .then(review => {
+          console.log({msg:"Updated",review});
+          res.status(200).send(review)
+      })
+      .catch(err => {
+          console.error(err);
+          res.status(400).send(err);
+      })
+}
+
+exports.showReview = async  (req, res) => {
+    Promise.all([
+        Review.findById(req.params.id).lean(),
+    ])
+    .then(entries => {
+        [review] = entries;
+        console.log(review);
+        res.render('reviews-show', {
+              review: review
+          })
+      })
+    .catch(console.error)
 }
 module.exports = exports;

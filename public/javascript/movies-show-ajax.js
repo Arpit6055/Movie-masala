@@ -2,6 +2,9 @@ $(document).ready(function () {
   $(".delete-review").submit(deleteReview)
   $("#review-form").submit(createReview);
 })
+function insertAfter(newElement, referenceElement) {
+  referenceElement.parentNode.insertBefore(newElement, referenceElement.nextSibling);
+}
 
 
 function createReview(event) {

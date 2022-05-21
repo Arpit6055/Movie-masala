@@ -11,8 +11,7 @@
             </div>
             <!-- Buttons -->
             <div class="d-flex flex-row-reverse mt-3">
-                <a href="/reviews/{{this._id}}" class="btn btn-link">View</a>
-                <button class="btn btn-link" type="button" data-toggle="modal" data-target="#delete-review-{{review._id}}">Delete</button>
+                <a href="/reviews/{{this._id}}" id="{{this.userId}}" value="{{this._id}}" class="btn btn-link view">View</a>
             </div>
         </div>
     </div>
