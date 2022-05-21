@@ -1,44 +1,45 @@
 
 const router = require("express").Router(),
-multer = require("multer"),
-path = require("path"),
 newUser = require('../controllers/login_register.controller'),
 Joi = require("joi"),
-{ forwardAuthenticated } = require("../config/auth"),
+{ forwardAuthenticated, ensureAuthenticated } = require("../config/auth"),
 validateRequest = require('../config/validate-request');
 
+function registerSchema(req, res, next) {
+  const schema = Joi.object({
+        username : Joi.string().min(3).max(16).required(),
+        email : Joi.string().email().required(),
+        password : Joi.string().min(6).max(16).required(),
+        name : Joi.string().min(3).required(),
+        join_date : Joi.date().default(Date.now())
+  });
+  validateRequest(req, res, next, schema);
+}
 function loginSchema(req, res, next) {
   const schema = Joi.object({
-        
+        username : Joi.string().min(3).max(16).required(),
+        password : Joi.string().min(6).max(16).required()
   });
-  validateRequest(req, res, next, schema,0,"register");
+  validateRequest(req, res, next, schema);
 }
 
-let storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, 'uploads/profile_pic') ,
-  filename:(req, file, cb)=>{
-      const uniqueName = `${req.body.email}${path.extname(file.originalname)}`;
-     cb(null, uniqueName)
-  }
-});
-
-let upload = multer({ storage, limits:{ fileSize: 1000000 * 100 }, }).single('profile_pic');
 
 // Login Page
-router.get('/getLoginPage/', forwardAuthenticated, newUser.getLoginPage);
+router.get('/login/', newUser.getLoginPage);
 
 // Register Page
-router.get('/getRegisterPage/', forwardAuthenticated, newUser.getRegisterPage);
+router.get('/register/', newUser.getRegisterPage);
 
 // Register
-router.post('/register',forwardAuthenticated,upload, newUser.newUserRegistry);
+router.post('/register/',registerSchema,forwardAuthenticated, newUser.newUserRegistry);
 
 // Login
-router.post('/login', newUser.login);
+router.post('/login/',loginSchema,forwardAuthenticated, newUser.login);
 
 // Logout
-router.get('/logout', newUser.logout);
+router.get('/logout/', newUser.logout);
 
+router.get('/dashboard/',ensureAuthenticated, newUser.dashboard);
 
 
 module.exports = router;

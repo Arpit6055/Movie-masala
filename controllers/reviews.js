@@ -21,18 +21,7 @@ module.exports = function(app) {
 	    .catch(console.error)
 	});
 
-	// CREATE
-    app.post('/movies/:id/reviews', (req, res) => {
-        Review.create(req.body)
-        .then(review => {
-            console.log(review);
-            res.status(200).send(review)
-        })
-        .catch(err => {
-        	console.error(err);
-        	res.status(400).send(err);
-        })
-    });
+
 
 	// UPDATE
 	app.put('/reviews/:id', (req, res) => {

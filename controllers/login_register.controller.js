@@ -1,8 +1,9 @@
 const bcrypt = require("bcryptjs"),
   passport = require("passport"),
-  User = require("../models/User");
+  User = require('../models/user');
 exports.getLoginPage = async (req, res) => {
   try {
+    console.log("welcome to login");
     res.status(200).render('login', { title: 'Login', layout : 'layout'});
   } catch (error) {
     console.log(error);
@@ -17,41 +18,30 @@ exports.getRegisterPage = async (req, res) => {
     res.status(500).json({ error: "SERVER ERROR" });
   }
 };
-exports.newUserRegistry = async (req, res) => {
+exports.newUserRegistry = async (req, res, next) => {
   try {
-    const profile_pic = req.file.fieldname;
-    const {name,email,password,password2} = req.body;
-    let errors = [];
-    if (!name || !email || !password || !password2 || !profile_pic) {
-        errors.push({msg: "Please enter all fields"});
-    }
-    if (password != password2) {
-        errors.push({msg: "Passwords do not match"});
-    }
-    if (password.length < 6) {
-        errors.push({ msg: "Password must be at least 6 characters"});
-    }
-    if (errors.length > 0) {
-        res.render("register.ejs", {errors,name,email,password,password2});
-    } else {User.findOne({email: email}).then((user) => {
+    let {username,name,email,password,join_date} = req.body;
+    console.log({body:req.body});
+    User.findOne({email}).then((user) => {
+            console.log({msg : "Inside user"});
             if (user) {
-                req.flash("error_msg", "Email already exists");
-                res.redirect("/users/register");
+              req.flash("error_msg", "Email already exists");
+              res.redirect("/auth/register/");
             }else {
-                const newUser = new User({name,email,password,profile_pic: req.file.filename,});
+                const newUser = new User({name,email,password,username,join_date});
                 bcrypt.genSalt(10, (err, salt) => {
+                  console.log({msg : "Inside bycrypt"});
                     bcrypt.hash(newUser.password, salt, (err, hash) => {
                         if (err) throw err;
                         newUser.password = hash;
                         newUser.save().then((user) => {
-                            req.flash("success_msg", "You are now registered and can log in");
-                            res.redirect("/users/getLoginPage/");
+                            console.log({user:"Created user successfully"});
+                            res.redirect('/auth/login/')
                         }).catch((err) => console.log(err));
                     });
                 });
             }
         });
-    }
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "SERVER ERROR" });
@@ -59,10 +49,10 @@ exports.newUserRegistry = async (req, res) => {
 };
 exports.login = async (req, res, next) => {
   try {
-    passport.authenticate("local", {
-      successRedirect: "/dashboard",
-      failureRedirect: "/users/login",
-      failureFlash: true,
+    console.log({body:req.body});
+    passport.authenticate("local-login", {
+      successRedirect: "/",
+      failureRedirect: "/home/",
     })(req, res, next);
   } catch (error) {
     console.log(error);
@@ -72,11 +62,22 @@ exports.login = async (req, res, next) => {
 exports.logout = async (req, res) => {
   try {
     req.logout();
-    req.flash("success_msg", "You are logged out");
-    res.redirect("/users/login");
+    req.flash('success', 'Logged out successfully');
+    res.redirect('/');
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "SERVER ERROR" });
   }
 };
+
+exports.dashboard = async(req, res) =>{
+  try {
+    console.log("dashboard here");
+    return res.render('dashboard', { title: 'Dashboard' , layout: 'main'});
+  } catch (error) {
+    console.log(error);
+    console.log("error n dashboard");
+  }
+}
+
 module.exports = exports;

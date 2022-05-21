@@ -1,26 +1,30 @@
-var express = require('express');
-var path = require('path');
-var logger = require('morgan');
-var expressValidator = require('express-validator');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var { engine } = require('express-handlebars')
-var session  = require('express-session');
-var passport = require('passport');
-var flash = require('connect-flash');
-var configDB = require('./config/db');
+const express = require('express'),
+connectDB = require('./config/db');
+connectDB();
+const path = require('path')
+, logger = require('morgan')
+, expressValidator = require('express-validator')
+, cookieParser = require('cookie-parser')
+, bodyParser = require('body-parser')
+, { engine, create } = require('express-handlebars')
+, session  = require('express-session')
+, passport = require('passport')
+, flash = require('connect-flash');
 require('./config/passport')(passport);
-var routes = require('./routes/index');
+
 
 var app = express();
 
-app.use(session({
-  secret: 'secret',
-  saveUninitialized: true,
-  resave: 'true'
-}));
+app.use(
+  session({
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true
+  })
+);
 
 app.use(flash());
+
 
 // In this example, the formParam value is going to get morphed into form body format useful for printing.
 app.use(expressValidator({
@@ -53,6 +57,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -64,7 +69,12 @@ app.use(function (req, res, next) {
 });
 
 
-app.use('/', routes);
+//routes
+app.get('/home/', function(req, res) {
+  res.status(200).render('login', { title: 'Login', layout : 'layout'});
+});
+app.use('/',require("./routes/app.routes"));
+app.use('/auth/', require("./routes/users.routes"));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
