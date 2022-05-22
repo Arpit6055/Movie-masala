@@ -5,6 +5,7 @@ body {
 
 
 .card {
+    color: rgb(200, 195, 188);
     background-color: rgb(24, 26, 27);
     border-color: rgba(140, 130, 115, 0.13);
 }
