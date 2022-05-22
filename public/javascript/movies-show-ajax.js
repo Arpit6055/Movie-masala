@@ -79,7 +79,7 @@ function deleteReview(event) {
     url: $(this).attr("action"),
     complete: function(xhr, textStatus) {
       console.log("removed");
-      window.location=window.location.origin;
+      window.location.reload();
     },
     error: function(jqXHR, textStatus, errorThrown){
       alert(errorThrown)
