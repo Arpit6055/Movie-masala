@@ -28,6 +28,16 @@ function createReviewSchema(req, res, next) {
     });
     validateRequest(req, res, next, schema);
 }
+function updateReviewSchema(req, res, next) {
+    const schema = Joi.object({
+        title: Joi.string().min(2).required(),
+        movieTitle: Joi.string().min(2).required(),
+        rating: Joi.number().integer().min(1).max(5).required(),
+        description: Joi.string().required(),
+        movieId: Joi.number().integer().min(1).required()
+    });
+    validateRequest(req, res, next, schema);
+}
   
 //movies API
 router.get('/' ,homepageSchema,ensureAuthenticated,movies.HomePage);
@@ -41,7 +51,7 @@ router.get('/reviews/rating',reviewCountSchema, movies.countandtotalReview);
 //review APIs
 router.get('/reviews/:id', ensureAuthenticated, movies.showReview);
 router.post('/reviews/delete/:id/', ensureAuthenticated, movies.deleteReview);
-router.post('/reviews/update/:id/', forwardAuthenticated, movies.updateReview);
+router.post('/reviews/update/:id/',updateReviewSchema, forwardAuthenticated, movies.updateReview);
 
 
 

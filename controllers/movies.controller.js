@@ -94,19 +94,18 @@ exports.deleteReview = async (req, res) => {
         });
 };
 
+
 exports.updateReview = async (req, res) => {
+    console.log({msg:"hello"});
     Review.findOneAndUpdate(
         { _id: req.params.id, userId: req.user._id },
-        req.body,
-        { new: true }
-    )
-        .lean()
-        .then((review) => {
+        req.body
+    ).lean().then((review) => {
             console.log({ msg: "Updated", review });
             res.status(200).send(review);
         })
         .catch((err) => {
-            console.error(err);
+            console.error({msg:"err in updateReview ",err});
             req.flash("errs", { msg: "SERVER err" });
             res.redirect("/");
         });

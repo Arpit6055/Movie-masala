@@ -63,7 +63,6 @@
     {{/each}}
 </div>
 <script>
-    console.log(`${window.location.origin}/reviews/rating?id={{movie.id}}`)
     fetch( `${window.location.origin}/reviews/rating?id={{movie.id}}` ).then(response => response.json())
   .then((data) => {
       console.log(data)
