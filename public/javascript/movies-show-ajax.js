@@ -72,14 +72,14 @@ function createReview(event) {
 
 function deleteReview(event) {
   event.preventDefault();
+  console.log($(this).attr("action"));
   var reviewId = $(this).attr("action").match(/\/reviews\/(\w*)/)[1];
   $.ajax({
     type: "POST",
     url: $(this).attr("action"),
     complete: function(xhr, textStatus) {
       console.log("removed");
-      var url = `${window.location.origin}`.slice(0,-1)
-      window.location=url;
+      window.location=window.location.origin;
     },
     error: function(jqXHR, textStatus, errorThrown){
       console.log(textStatus + ": " + jqXHR.status + " " + errorThrown);

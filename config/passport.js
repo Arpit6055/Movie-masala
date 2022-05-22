@@ -25,7 +25,6 @@ module.exports = function(passport) {
 			}
 			
 			if(!user){
-				console.log('Error : user not found')
 				return done(null, false, req.flash('errors', {msg:'User not found'}));
 			}
 			if(user.lockedUpto && Date.now()<user.lockedUpto){
@@ -37,7 +36,6 @@ module.exports = function(passport) {
 					var lockAcc = await User.updateOne({ username }, { loginAttempts: 4, lockedUpto: tommorow });
 					return done(null, false, req.flash('errors', {msg:'Account locked for 24 hour'}));
 				} else {
-					console.log("inc loginttempt");
 					var lockAcc = await User.updateOne({ username }, { loginAttempts: user.loginAttempts + 1 });
 					return done(null, false, req.flash('errors', {msg:`Invalid password,${4-(user.loginAttempts + 1) } attempts left`}));
 				}
@@ -49,7 +47,6 @@ module.exports = function(passport) {
 		});
 	}));
 	var isValidPassword = function(user, password){
-		console.log("checking hash");
 		return bcrypt.compareSync(password, user.password);
 	}
 }

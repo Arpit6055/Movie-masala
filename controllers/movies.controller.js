@@ -34,20 +34,21 @@ exports.HomePage = async (req, res) => {
 };
 
 exports.movieDetails = async (req, res) => {
+    var {id} = req.params
+    console.log({id}); 
+    if(id[id.length -1]==`"`)id=id.slice(0,-1)
+    console.log({id});
     Promise.all([
         moviedb.movieInfo({
-            id: req.params.id,
+            id
         }),
         moviedb.movieTrailers({
-            id: req.params.id,
+            id
         }),
         Review.find({
-            movieId: req.params.id,
-        })
-            .sort("-date")
-            .lean(),
-    ])
-        .then((responses) => {
+            movieId: id,
+        }).sort("-date").lean(),
+    ]).then((responses) => {
             const [movie, videos, reviews] = responses;
             movie.trailer_youtube_id = videos.youtube[0] && videos.youtube[0].source;
             res.render("movies-show", {
@@ -96,7 +97,6 @@ exports.deleteReview = async (req, res) => {
 
 
 exports.updateReview = async (req, res) => {
-    console.log({msg:"hello"});
     Review.findOneAndUpdate(
         { _id: req.params.id, userId: req.user._id },
         req.body
@@ -112,7 +112,8 @@ exports.updateReview = async (req, res) => {
 };
 
 exports.showReview = async (req, res) => {
-    Promise.all([Review.findById(req.params.id).lean()])
+    var {id} = req.params
+    Promise.all([Review.findById(id).lean()])
         .then((entries) => {
             [review] = entries;
             console.log(review);

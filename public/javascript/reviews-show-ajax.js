@@ -4,8 +4,7 @@ $(document).ready(function () {
 
 function editReview(event) {
   event.preventDefault();
-  console.log($(this).serialize())
-
+  console.log("hello world");
   $.ajax({
     type: "POST",
     url: $(this).attr("action"),
@@ -21,7 +20,8 @@ function editReview(event) {
     $("#review-rating").val(review.rating);
     $("#review-description").text(review.description);
     $(".modal").modal("hide");
-    window.location.reload()
+
+    // window.location.reload()
   })
   .fail(function (error) {
       alert('There was a problem saving your edits. Please try again.')
