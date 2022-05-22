@@ -41,7 +41,7 @@ exports.newUserRegistry = async (req, res, next) => {
                         if (err) throw err;
                         newUser.password = hash;
                         newUser.save().then((user) => {
-                            
+                          console.log({user, msg:"sucesfully created new user"});
                             res.redirect('/auth/login/')
                         }).catch((err) => console.log(err));
                     });
