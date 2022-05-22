@@ -65,7 +65,7 @@ exports.movieDetails = async (req, res) => {
 
 exports.createReview = async (req, res) => {
     req.body.userId = req.user._id;
-    var acc = await Review.find({userId:req.user._id});
+    var acc = await Review.find({userId:req.user._id, movieId:req.body.movieId});
     console.log({acc});
     if(!acc[0]){
         Review.create(req.body)
