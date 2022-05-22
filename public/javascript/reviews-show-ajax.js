@@ -23,9 +23,8 @@ function editReview(event) {
     window.location.reload()
   })
   .fail(function (error) {
-      console.log({error});
-      alert(error)
-      console.error(error);
+    alert(error.responseJSON.error)
+    console.error(error);
   })
 }
 

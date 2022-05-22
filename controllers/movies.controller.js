@@ -59,8 +59,7 @@ exports.movieDetails = async (req, res) => {
         })
         .catch((err) => {
             console.error(err);
-            req.flash("errs", { msg: "SERVER err" });
-            res.redirect("/");
+        return res.status(500).json({ error: "Server error" });
         });
 };
 
@@ -76,8 +75,7 @@ exports.createReview = async (req, res) => {
             })
             .catch((err) => {
                 console.log(err);
-                req.flash("errs", { msg: "SERVER err" });
-                res.redirect("/");
+        return res.status(500).json({ error: "Server error" });
             });
     }else{
         res.status(400).json({error:"You cannot review a movie twice"})
@@ -87,17 +85,15 @@ exports.createReview = async (req, res) => {
 exports.deleteReview = async (req, res) => {
     Promise.all([
         Review.findOneAndDelete({ _id: req.params.id, userId: req.user._id }),
-    ])
-        .then((entries) => {
+    ]).then((entries) => {
             [review] = entries;
             console.log("Deleted review");
             if (req.xhr) res.status(200).send(review);
             else res.redirect(`/movies/${review.movieId}"`);
         })
         .catch((err) => {
-            console.error(err);
-            req.flash("errs", { msg: "SERVER err" });
-            res.redirect("/");
+            console.log(err);
+        return res.status(500).json({ error: "Server error" });
         });
 };
 
@@ -112,8 +108,8 @@ exports.updateReview = async (req, res) => {
         })
         .catch((err) => {
             console.error({msg:"err in updateReview ",err});
-            req.flash("errs", { msg: "SERVER err" });
-            res.redirect("/");
+            console.log(err);
+        return res.status(500).json({ error: "Server error" });
         });
 };
 
@@ -130,8 +126,7 @@ exports.showReview = async (req, res) => {
         })
         .catch((err) => {
             console.error(err);
-            req.flash("errs", { msg: "SERVER err" });
-            res.redirect("/");
+        return res.status(500).json({ error: "Server error" });
         });
 };
 
@@ -157,6 +152,7 @@ exports.countandtotalReview = async (req, res) => {
         return res.json(data)
     } catch (err) {
         console.error(err);
+        return res.status(500).json({ error: "Server error" });
     }
 };
 module.exports = exports;

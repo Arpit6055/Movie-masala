@@ -82,6 +82,7 @@ function deleteReview(event) {
       window.location=window.location.origin;
     },
     error: function(jqXHR, textStatus, errorThrown){
+      alert(errorThrown)
       console.log(textStatus + ": " + jqXHR.status + " " + errorThrown);
     }
   })
