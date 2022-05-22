@@ -23,7 +23,8 @@ function editReview(event) {
     window.location.reload()
   })
   .fail(function (error) {
-      alert('There was a problem saving your edits. Please try again.')
+      console.log({error});
+      alert(error)
       console.error(error);
   })
 }

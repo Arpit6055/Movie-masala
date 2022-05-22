@@ -65,7 +65,7 @@ function createReview(event) {
     $(".modal").modal("hide");
   })
   .fail(function (error) {
-      alert('There was a problem saving your review. Please try again.')
+      alert(error.responseJSON.error)
       console.error(error);
   })
 }

@@ -65,7 +65,6 @@
 <script>
     fetch( `${window.location.origin}/reviews/rating?id={{movie.id}}` ).then(response => response.json())
   .then((data) => {
-      console.log(data)
       if(data.count){
           document.querySelector("#rpr").textContent = data.avg_rating
         document.querySelector("#rpc").textContent = data.count
