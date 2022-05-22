@@ -144,7 +144,8 @@ exports.countandtotalReview = async (req, res) => {
           if(ratings[0]){
               delete ratings[0]._id
               data ={...ratings[0]}
-              data.avg_rating = data.potatoRatings/data.count
+              var num = data.potatoRatings/data.count
+              data.avg_rating =  num.toFixed(2);
             }else{
                 data.error="No movie found"
                 data.avg_rating=null;
