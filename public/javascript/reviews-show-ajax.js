@@ -20,8 +20,7 @@ function editReview(event) {
     $("#review-rating").val(review.rating);
     $("#review-description").text(review.description);
     $(".modal").modal("hide");
-
-    // window.location.reload()
+    window.location.reload()
   })
   .fail(function (error) {
       alert('There was a problem saving your edits. Please try again.')

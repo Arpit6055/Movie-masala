@@ -66,16 +66,22 @@ exports.movieDetails = async (req, res) => {
 
 exports.createReview = async (req, res) => {
     req.body.userId = req.user._id;
-    Review.create(req.body)
-        .then((review) => {
-            console.log({ msg: "Created a review successfully" });
-            res.status(200).send(review);
-        })
-        .catch((err) => {
-            console.log(err);
-            req.flash("errs", { msg: "SERVER err" });
-            res.redirect("/");
-        });
+    var acc = await Review.find({userId:req.user._id});
+    console.log({acc});
+    if(!acc[0]){
+        Review.create(req.body)
+            .then((review) => {
+                console.log({ msg: "Created a review successfully" });
+                res.status(200).send(review);
+            })
+            .catch((err) => {
+                console.log(err);
+                req.flash("errs", { msg: "SERVER err" });
+                res.redirect("/");
+            });
+    }else{
+        res.status(400).json({error:"You cannot review a movie twice"})
+    }
 };
 
 exports.deleteReview = async (req, res) => {
