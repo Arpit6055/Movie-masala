@@ -40,3 +40,14 @@ body {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
+
+.modal-content {
+  background-color: rgb(24, 26, 27);
+  border-color: rgba(140, 130, 115, 0.2);
+  outline-color: initial;
+}
+.form-control {
+  color: rgb(154, 145, 132);
+  background-color: rgb(24, 26, 27);
+  border-color: rgb(60, 65, 68);
+}
